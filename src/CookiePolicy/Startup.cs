@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,8 +25,15 @@ namespace CookiePolicy
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCookiePolicy(new CookiePolicyOptions()
+            {
+                HttpOnly = HttpOnlyPolicy.Always,
+                Secure = CookieSecurePolicy.SameAsRequest,
+            });
+
             app.Run(async (context) =>
             {
+                context.Response.Cookies.Append("TestCookie", "TestValue");
                 await context.Response.WriteAsync("Hello World!");
             });
         }
