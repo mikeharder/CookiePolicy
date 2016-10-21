@@ -12,7 +12,10 @@ namespace CookiePolicy
         public static void Main(string[] args)
         {
             var host = new WebHostBuilder()
-                .UseKestrel()
+                .UseKestrel(options => {
+                    options.UseHttps("testCert.pfx", "testPassword");
+                })
+                .UseUrls("http://localhost:5000", "https://localhost:5001")
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .UseStartup<Startup>()
